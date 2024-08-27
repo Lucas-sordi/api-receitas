@@ -41,7 +41,7 @@ export class RecipesService {
       totalTime,
     });
 
-    return { message: `Task updated successfully`};
+    return { message: `Recipe updated successfully`};
   }
 
   async remove(id: number): Promise<{ message: string }> {
@@ -49,7 +49,7 @@ export class RecipesService {
 
     await this.recipesRepository.delete(id);
 
-    return { message: `Task deleted successfully`};
+    return { message: `Recipe deleted successfully`};
   }
 
   // Funções de validação
