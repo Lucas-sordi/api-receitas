@@ -11,11 +11,12 @@ export class RecipesService {
     private recipesRepository: Repository<RecipeEntity>,
   ) {}
 
-  async create(createRecipe: CreateRecipeDto): Promise<RecipeEntity> {
+  async create(createRecipe: CreateRecipeDto, userId: number): Promise<RecipeEntity> {
     const totalTime = createRecipe.preparationTime + createRecipe.cookingTime;
     const newRecipe = this.recipesRepository.create({
       ...createRecipe,
       totalTime,
+      userId,
     });
     return this.recipesRepository.save(newRecipe);
   }
