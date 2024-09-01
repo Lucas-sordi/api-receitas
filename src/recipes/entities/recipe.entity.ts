@@ -1,5 +1,6 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, JoinColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, JoinColumn, OneToMany } from 'typeorm';
 import { UserEntity } from "src/user/entities/user.entity";
+import { ReviewEntity } from 'src/reviews/entities/review.entity';
 
 @Entity({ name: 'recipes' })
 export class RecipeEntity {
@@ -30,10 +31,13 @@ export class RecipeEntity {
   @Column({ name: 'views', nullable: false, type: 'int', default: 0 })
   views: number;
 
-  @Column({ name: 'userId', 'nullable': false })
+  @Column({ name: 'userId', nullable: false, type: 'int' })
   userId: number;
 
   @ManyToOne(() => UserEntity, (user) => user.id)
   @JoinColumn({ name: 'userId', referencedColumnName: 'id' })
   user: UserEntity;
+
+  @OneToMany(() => ReviewEntity, (review) => review.recipe)
+  reviews: ReviewEntity[];
 }

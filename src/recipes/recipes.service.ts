@@ -1,15 +1,19 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Inject, Injectable, NotFoundException, forwardRef } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { RecipeEntity } from './entities/recipe.entity';
 import { CreateRecipeDto } from './dto/createRecipe.dto';
+import { ReviewsService } from 'src/reviews/reviews.service';
 
 @Injectable()
 export class RecipesService {
   constructor(
     @InjectRepository(RecipeEntity)
     private recipesRepository: Repository<RecipeEntity>,
-  ) {}
+
+    @Inject(forwardRef(() => ReviewsService))
+    private reviewsService: ReviewsService
+  ) { }
 
   async create(createRecipe: CreateRecipeDto, userId: number): Promise<RecipeEntity> {
     const totalTime = createRecipe.preparationTime + createRecipe.cookingTime;
@@ -25,13 +29,20 @@ export class RecipesService {
     return this.recipesRepository.find();
   }
 
-  async findOne(id: number): Promise<RecipeEntity> {
+  async findOne(id: number): Promise<RecipeEntity & { totalReviews: number, averageAvaliation: number }> {
     const recipe = await this.findRecipeOrThrow(id);
-  
+
     recipe.views += 1;
     await this.recipesRepository.save(recipe);
-    
-    return recipe;  }
+
+    const { totalReviews, averageAvaliation } = await this.reviewsService.findRecipeAvaliationInfo(id);
+
+    return {
+      ...recipe,
+      totalReviews,
+      averageAvaliation,
+    };
+  }
 
   async update(id: number, updateRecipeDto: CreateRecipeDto): Promise<{ message: string }> {
     await this.findRecipeOrThrow(id);
@@ -42,7 +53,7 @@ export class RecipesService {
       totalTime,
     });
 
-    return { message: `Recipe updated successfully`};
+    return { message: `Recipe updated successfully` };
   }
 
   async remove(id: number): Promise<{ message: string }> {
@@ -50,11 +61,11 @@ export class RecipesService {
 
     await this.recipesRepository.delete(id);
 
-    return { message: `Recipe deleted successfully`};
+    return { message: `Recipe deleted successfully` };
   }
 
   // Funções de validação
-  private async findRecipeOrThrow(id: number): Promise<RecipeEntity> {
+  async findRecipeOrThrow(id: number): Promise<RecipeEntity> {
     const recipe = await this.recipesRepository.findOneBy({ id });
     if (!recipe) throw new NotFoundException(`Recipe with id ${id} not found`);
     return recipe;

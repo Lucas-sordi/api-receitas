@@ -1,4 +1,5 @@
 import { RecipeEntity } from 'src/recipes/entities/recipe.entity';
+import { ReviewEntity } from 'src/reviews/entities/review.entity';
 import { Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 
 @Entity({ name: 'user' })
@@ -26,4 +27,7 @@ export class UserEntity {
 
   @OneToMany(() => RecipeEntity, (recipe) => recipe.user)
   recipes: RecipeEntity[];
+
+  @OneToMany(() => ReviewEntity, (review) => review.recipe)
+  reviews: ReviewEntity[];
 };

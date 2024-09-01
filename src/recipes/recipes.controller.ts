@@ -2,7 +2,7 @@ import { Controller, Get, Post, Body, Param, Put, Delete, UseGuards } from '@nes
 import { RecipesService } from './recipes.service';
 import { CreateRecipeDto } from './dto/createRecipe.dto';
 import { JwtGuard } from 'src/auth/guards/jwt.guard';
-import { OwnerGuard } from 'src/auth/guards/owner.guard';
+import { RecipeOwnerGuard } from 'src/auth/guards/recipeOwner.guard';
 import { GetUserId } from 'src/utils/decorators/getUserId.decorator';
 
 @Controller('recipes')
@@ -26,13 +26,13 @@ export class RecipesController {
   }
 
   @Put(':id')
-  @UseGuards(JwtGuard, OwnerGuard)
+  @UseGuards(JwtGuard, RecipeOwnerGuard)
   update(@Param('id') id: string, @Body() updateRecipe: CreateRecipeDto) {
     return this.recipesService.update(+id, updateRecipe);
   }
 
   @Delete(':id')
-  @UseGuards(JwtGuard, OwnerGuard)
+  @UseGuards(JwtGuard, RecipeOwnerGuard)
   remove(@Param('id') id: string) {
     return this.recipesService.remove(+id);
   }
