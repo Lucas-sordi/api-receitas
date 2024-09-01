@@ -4,12 +4,17 @@ import { Repository } from 'typeorm';
 import { UserEntity } from './entities/user.entity';
 import * as bcrypt from 'bcryptjs';
 import { CreateUserDto } from './dto/createUser.dto';
+import { ReviewsService } from 'src/reviews/reviews.service';
+import { RecipesService } from 'src/recipes/recipes.service';
 
 @Injectable()
 export class UserService {
   constructor(
     @InjectRepository(UserEntity)
     private usersRepository: Repository<UserEntity>,
+
+    private reviewsService: ReviewsService,
+    private recipesService: RecipesService,
   ) { }
 
   async create(createUserBody: CreateUserDto): Promise<UserEntity> {
@@ -33,11 +38,25 @@ export class UserService {
     return this.usersRepository.findOne({ where: { username } });
   }
 
-  async findById(userId: number) {
+  async findById(userId: number): Promise<UserEntity> {
     const user = await this.usersRepository.findOne({ where: { id: userId } });
 
     if (!user) throw new NotFoundException('User not found');
 
     return user;  
-  };
+  }
+
+  async findReviewsByUser(userId: number): Promise<any> {
+    const user = await this.usersRepository.findOne({ where: { id: userId } });
+    if (!user) throw new NotFoundException(`User with id ${userId} not found`);
+    
+    return this.reviewsService.findReviewsByUser(userId);
+  }
+
+  async findRecipesByUser(userId: number): Promise<any> {
+    const user = await this.usersRepository.findOne({ where: { id: userId } });
+    if (!user) throw new NotFoundException(`User with id ${userId} not found`);
+
+    return this.recipesService.findRecipesByUser(userId);
+  }
 }

@@ -64,6 +64,11 @@ export class RecipesService {
     return { message: `Recipe deleted successfully` };
   }
 
+  async findRecipesByUser(userId: number): Promise<RecipeEntity[]> {
+    return this.recipesRepository.findBy({ userId });
+  }
+
+
   // Funções de validação
   async findRecipeOrThrow(id: number): Promise<RecipeEntity> {
     const recipe = await this.recipesRepository.findOneBy({ id });

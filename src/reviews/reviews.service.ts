@@ -72,6 +72,10 @@ export class ReviewsService {
     return { message: `Review deleted successfully`};
   }
 
+  async findReviewsByUser(userId: number): Promise<ReviewEntity[]> {
+    return this.reviewsRepository.findBy({ userId });
+  }
+
 
   // Funções de validação
   private async findReviewOrThrow(id: number): Promise<ReviewEntity> {
