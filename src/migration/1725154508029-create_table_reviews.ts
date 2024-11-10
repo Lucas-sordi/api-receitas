@@ -25,7 +25,12 @@ export class CreateTableReviews1725154508029 implements MigrationInterface {
           isNullable: true,
         },
         {
-          name: 'createdAt',
+          name: 'created_at',
+          type: 'timestamp',
+          default: 'CURRENT_TIMESTAMP',
+        },
+        {
+          name: 'updated_at',
           type: 'timestamp',
           default: 'CURRENT_TIMESTAMP',
         },

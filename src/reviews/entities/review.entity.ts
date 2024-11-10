@@ -1,4 +1,4 @@
-import { Entity, Column, ManyToOne, PrimaryGeneratedColumn, CreateDateColumn, JoinColumn } from 'typeorm';
+import { Entity, Column, ManyToOne, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, JoinColumn } from 'typeorm';
 import { UserEntity } from 'src/user/entities/user.entity';
 import { RecipeEntity } from 'src/recipes/entities/recipe.entity';
 
@@ -13,8 +13,11 @@ export class ReviewEntity {
   @Column({ name: 'comment', nullable: true, type: 'text' })
   comment: string;
 
-  @CreateDateColumn({ name: 'createdAt', type: 'timestamp' })
+  @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;
+
+  @UpdateDateColumn({ name: 'updated_at' })
+  updatedAt: Date;
 
   @Column({ name: 'recipeId', nullable: false, type: 'int' })
   recipeId: number;
