@@ -55,6 +55,16 @@ export class CreateTableRecipes1724562462318 implements MigrationInterface {
           isNullable: false,
           default: 0,
         },
+        {
+          name: 'created_at',
+          type: 'timestamp',
+          default: 'CURRENT_TIMESTAMP',
+        },
+        {
+          name: 'updated_at',
+          type: 'timestamp',
+          default: 'CURRENT_TIMESTAMP',
+        },
       ],
     }), true);
   }
