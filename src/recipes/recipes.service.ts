@@ -1,6 +1,6 @@
 import { Inject, Injectable, NotFoundException, forwardRef } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository, ILike } from 'typeorm';
 import { RecipeEntity } from './entities/recipe.entity';
 import { CreateRecipeDto } from './dto/createRecipe.dto';
 import { ReviewsService } from 'src/reviews/reviews.service';
@@ -42,6 +42,12 @@ export class RecipesService {
       totalReviews,
       averageAvaliation,
     };
+  }
+
+  async findRecipesByName(name: string): Promise<RecipeEntity[]> {
+    return this.recipesRepository.find({
+      where: { name: ILike(`%${name}%`) },
+    });
   }
 
   async update(id: number, updateRecipeDto: CreateRecipeDto): Promise<{ message: string }> {
