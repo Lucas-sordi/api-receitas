@@ -16,8 +16,8 @@ export class RecipesController {
   }
 
   @Get()
-  findAll() {
-    return this.recipesService.findAll();
+  findAll(@Query('page') page: number = 1) {
+    return this.recipesService.findAll(page);
   }
 
   @Get('/search')

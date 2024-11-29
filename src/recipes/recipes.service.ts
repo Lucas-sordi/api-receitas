@@ -25,8 +25,25 @@ export class RecipesService {
     return this.recipesRepository.save(newRecipe);
   }
 
-  async findAll(): Promise<RecipeEntity[]> {
-    return this.recipesRepository.find();
+  async findAll(page: number): Promise<{ data: RecipeEntity[], totalItems: number, page: number, limit: number, totalPages: number }> {
+    const limit = 10;
+    page = Math.max(page, 1);
+
+    const [recipes, totalItems] = await this.recipesRepository.findAndCount({
+      skip: (page - 1) * limit,
+      take: limit,
+      order: {
+        createdAt: 'ASC',
+      },
+    });
+
+    return {
+      data: recipes,
+      totalItems,
+      page,
+      limit,
+      totalPages: Math.ceil(totalItems / limit),
+    };
   }
 
   async findOne(id: number): Promise<RecipeEntity & { totalReviews: number, averageAvaliation: number }> {
@@ -47,6 +64,9 @@ export class RecipesService {
   async findRecipesByName(name: string): Promise<RecipeEntity[]> {
     return this.recipesRepository.find({
       where: { name: ILike(`%${name}%`) },
+      order: {
+        createdAt: 'ASC',
+      },
     });
   }
 
