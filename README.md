@@ -13,6 +13,8 @@ Possui as funcionalidades de Autenticação, Receitas e Avaliações.
 ##
 
 #### Execução
+Para executar, deve-se ter um arquivo `.env` com os mesmos campos do arquivo `.example.env` disponibilizado no repositório.
+
 `npm run start` irá compilar e executar o projeto.
 
 ##
